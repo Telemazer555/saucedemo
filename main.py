@@ -1,12 +1,20 @@
-from pprint import pprint
-import requests
+from playwright.sync_api import sync_playwright
+from locators.login import Login as loc
+import time
+from test.conftest import timeit
 
-countries = requests.get( "https://restcountries.com/v3.1/name/russia").json()
-pprint( countries)
+@timeit
+def login():
+    playwright = sync_playwright().start()
+    browser = playwright.chromium.launch(headless=False)
+    page = browser.new_page()
+    page.goto('https://www.saucedemo.com/')
+    page.fill(loc.LoginUsername , "standard_user")
+    page.fill(loc.LoginPassword , "secret_sauce")
+    page.click(loc.LoginButton)
+    time.sleep(3)
+    browser.close()
+    playwright.stop()
 
-requests.get( "https://restcountries.com/v3.1/name/russia").json()
 
-
-
-import sys
-print(sys.executable)
+login()
