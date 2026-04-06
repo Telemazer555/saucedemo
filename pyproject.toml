@@ -1,11 +1,15 @@
 [project]
 name = "saucedemo"
 version = "0.1.0"
+
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [
+    "dotenv>=0.9.9",
+    "faker>=35.2.2",
     "playwright>=1.48.0",
     "pytest>=8.3.5",
+    "pytest-asyncio>=0.24.0",
     "requests>=2.32.4",
 ]
