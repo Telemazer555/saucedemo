@@ -3,6 +3,7 @@ import pytest
 from playwright.sync_api import sync_playwright
 from playwright.async_api import async_playwright
 from src.pages.session_page import *
+from src.scenarios.scenarios import *
 
 
 @pytest.fixture(scope="session")
@@ -38,6 +39,16 @@ def checkout_page(page):
     return CheckoutPage(page)
 
 
+@pytest.fixture(scope="function")
+def one_product_and_logout(page):
+    return CheckoutPage(page)
+
+
+@pytest.fixture(scope="function")
+def item_sync(page):
+    return ItemSync(page)
+
+
 # Async ######################################################################
 
 
@@ -55,14 +66,17 @@ async def async_browser():
 
 
 @pytest_asyncio.fixture
-async def app_factory(async_browser):
-    apps = []
+async def item_async_factory(async_browser):
+    items = []
+
     async def _create():
         context = await async_browser.new_context()
         page = await context.new_page()
-        app = AppPages(page, context)
-        apps.append(app)
-        return app
+        item = ItemAsync(page)
+        items.append((page, context))
+        return item
+
     yield _create
-    for app in apps:
-        await app.close()
+    for page, context in items:
+        await page.close()
+        await context.close()
